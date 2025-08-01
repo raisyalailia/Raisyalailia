@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <style>
+    * {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
+    }
+
+    h2 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 28px;
+    }
+
+    .container {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    }
+
+    label {
+    font-weight: 500;
+    display: block;
+    margin-top: 12px;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="tel"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    transition: border 0.3s ease;
+    }
+
+    input:focus {
+    border-color: #0072ff;
+    outline: none;
+    }
+
+    .gender-group, .checkbox-group {
+    margin-top: 10px;
+    }
+
+    .gender-group label {
+    margin-right: 15px;
+    }
+
+    .checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    }
+
+    .checkbox-group input {
+    margin-right: 8px;
+    }
+
+    .error {
+    color: red;
+    font-size: 0.85em;
+    margin-top: 8px;
+    }
+
+    button {
+    margin-top: 18px;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    }
+
+    button:hover {
+    background: linear-gradient(to right, #0072ff, #00c6ff);
+    }
+
+    .output-box {
+    margin-top: 30px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 400px;
+    }
+
+    .output-box h3 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #0072ff;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 6px;
+    }
+
+    .output-box p {
+    margin: 6px 0;
+    font-size: 15px;
+    }
+    </style>
+</head>
+<body>
+
+<h2>Register</h2>
+
+<div class="container">
+    <form id="registerForm">
+    <label>Nama Lengkap:</label>
+    <input type="text" id="fullname" required>
+
+    <label>Email:</label>
+    <input type="email" id="email" required>
+
+    <label>Nomor HP:</label>
+    <input type="tel" id="phone" pattern="[0-9]{10,15}" required placeholder="Contoh: 081234567890">
+
+    <label>Password:</label>
+    <input type="password" id="password" required>
+
+    <label>Konfirmasi Password:</label>
+    <input type="password" id="confirmPassword" required>
+
+    <label>Tanggal Lahir:</label>
+    <input type="date" id="birthdate" required>
+
+    <label>Jenis Kelamin:</label>
+    <div class="gender-group">
+    <label><input type="radio" name="gender" value="Laki-laki" required> Laki-laki</label>
+    <label><input type="radio" name="gender" value="Perempuan"> Perempuan</label>
+    </div>
+
+    <div class="checkbox-group">
+    <input type="checkbox" id="agreement" required>
+    <label for="agreement">Saya memenuhi persyaratan</label>
+    </div>
+
+    <div class="error" id="errorMsg"></div>
+
+    <button type="submit">Daftar</button>
+    </form>
+</div>
+
+<div class="output-box" id="outputBox" style="display:none;">
+    <h3>Data Pendaftaran:</h3>
+    <p><strong>Nama:</strong> <span id="outName"></span></p>
+    <p><strong>Email:</strong> <span id="outEmail"></span></p>
+    <p><strong>Nomor HP:</strong> <span id="outPhone"></span></p>
+    <p><strong>Jenis Kelamin:</strong> <span id="outGender"></span></p>
+    <p><strong>Tanggal Lahir:</strong> <span id="outBirthdate"></span></p>
+</div>
+
+<script>
+    const form = document.getElementById('registerForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const outputBox = document.getElementById('outputBox');
+
+    form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const fullname = document.getElementById('fullname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const genderEl = document.querySelector('input[name="gender"]:checked');
+    const birthdate = document.getElementById('birthdate').value;
+    const agreement = document.getElementById('agreement').checked;
+
+    // Validasi
+    if (!genderEl) {
+    errorMsg.textContent = "Silakan pilih jenis kelamin!";
+    return;
+    }
+    if (password !== confirmPassword) {
+    errorMsg.textContent = "Password tidak cocok!";
+    return;
+    }
+    if (password.length < 6) {
+    errorMsg.textContent = "Password minimal 6 karakter!";
+    return;
+    }
+    if (!agreement) {
+    errorMsg.textContent = "Anda harus menyetujui persyaratan.";
+    return;
+    }
+
+    // Tampilkan hasil
+    errorMsg.textContent = "";
+    document.getElementById('outName').textContent = fullname;
+    document.getElementById('outEmail').textContent = email;
+    document.getElementById('outPhone').textContent = phone;
+    document.getElementById('outGender').textContent = genderEl.value;
+    document.getElementById('outBirthdate').textContent = birthdate;
+
+    outputBox.style.display = 'block';
+    form.reset();
+    });
+</script>
+
+</body>
+</html>
